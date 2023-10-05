@@ -1,11 +1,14 @@
 using url_shortener.Data;
-using url_shortener.Entities;
+using url_shortener.Models.Repository;
+using url_shortener.Models.Repository.Interface;
+using XYZRepository = url_shortener.Models.Repository.Implementations.XYZRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddDbContext<UrlShortenerContext>();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IXYZRepository, XYZRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -22,16 +25,6 @@ if (app.Environment.IsDevelopment())
 using (var context = new UrlShortenerContext())
 {
     context.Database.EnsureCreated();
-
-    var grd1 = new XYZ() { Name = "Test", UrlLong = "Test"};
-
-    context.Urls.Add(grd1);
-
-    context.SaveChanges();
-
-    foreach (var s in context.Urls) {
-        Console.WriteLine($"Name: {s.Name}, URL long: {s.UrlLong}");
-    }
 }
 
 app.UseHttpsRedirection();

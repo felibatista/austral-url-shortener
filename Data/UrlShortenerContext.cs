@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using url_shortener.Entities;
 
 namespace url_shortener.Data;
@@ -12,5 +11,4 @@ public class UrlShortenerContext : DbContext
     {
         optionsBuilder.UseSqlite("Data Source=identifier.sqlite");
     }
-    
 }
