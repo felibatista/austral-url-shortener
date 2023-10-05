@@ -3,8 +3,8 @@ Nos piden realizar un acortador de urls. El valor de los acortadores de URL es m
 
 Este ejercicio es típico de entrevistas avanzadas en las FAANG (https://kuczma.dev/articles/scale/system-design-1/) vamos a hacer nuestra propia versión adaptada.
 
+### Requisitos: 
 La aplicación debe ser una [ASP.NET](http://ASP.NET) Core Web API.
-
 Se debe usar una bases de datos SQL (SQLlite).
 
 ### Un Url Shortener público funcionaría así:
