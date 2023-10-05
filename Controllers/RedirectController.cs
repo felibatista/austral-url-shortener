@@ -1,14 +1,10 @@
-using System.Net;
-using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
-using url_shortener.Models;
-using url_shortener.Models.Repository;
 using url_shortener.Models.Repository.Interface;
 
 namespace url_shortener.Controllers;
 
 [ApiController]
-[Microsoft.AspNetCore.Mvc.Route("{urlShort}")]
+[Route("{urlShort}")]
 public class RedirectController : ControllerBase
 {
     private readonly IXYZRepository _context;
@@ -18,8 +14,8 @@ public class RedirectController : ControllerBase
         _context = context;
     }
     
-    [Microsoft.AspNetCore.Mvc.HttpGet]
-    public IActionResult getRedirect([FromUri] string urlShort = null)
+    [HttpGet]
+    public IActionResult getRedirect(string urlShort = null)
     {
         if (string.IsNullOrWhiteSpace(urlShort))
         {
