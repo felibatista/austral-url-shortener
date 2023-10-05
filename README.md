@@ -5,7 +5,7 @@ Nos piden realizar un acortador de URLs. El valor de los acortadores de URL es m
 
 > Este ejercicio es típico de entrevistas avanzadas en las FAANG (https://kuczma.dev/articles/scale/system-design-1/)
 
-### ⚒️ Funcionamiento
+## ⚒️ Funcionamiento
 Un visitante cualquiera llega a la página principal. Pega una URL y recibe una URL corta en nuestro sitio. Por ejemplo, http://localhost:4500/xY30pQ.
 Cuando se envía, la URL se guarda en la base de datos y se genera una cadena. La cadena tiene 6 caracteres de a-zA-Z0-9. los mismos que usa bitly. (esto proporciona (26+26+10)****6 = 62****6 = 56.800.235.584 posibilidades) Suficiente para nuestro ejemplo.
 Si llega una solicitud de esa URL "corta", se redirige a la URL original.
