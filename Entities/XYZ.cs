@@ -3,7 +3,9 @@
 public class XYZ
 {
     public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string UrlShort { get; set; } = string.Empty;
-    public string UrlLong { get; set; } = string.Empty;
+    public string Name { get; set; }
+    public string UrlShort { get; set; }
+    public string UrlLong { get; set; }
+    public int Clicks { get; set; }
+    public int CategoryId { get; set; }
 }

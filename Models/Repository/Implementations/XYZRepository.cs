@@ -20,18 +20,17 @@ public class XYZRepository : IXYZRepository
     
     public XYZ? getUrlLongByShort(string urlShort)
     {
-        using (var context = new UrlShortenerContext())
-        {
-            return context.Urls.FirstOrDefault(url => url.UrlShort == urlShort);
-        }
+        return _context.Urls.FirstOrDefault(url => url.UrlShort == urlShort);
     }
     
     public bool isUrlShortExist(string urlShort)
     {
-        using (var context = new UrlShortenerContext())
-        {
-            return context.Urls.Any(url => url.UrlShort == urlShort);
-        }
+        return _context.Urls.Any(url => url.UrlShort == urlShort);
+    }
+    
+    public bool isUrlLongExist(string urlLong)
+    {
+        return _context.Urls.Any(url => url.UrlLong == urlLong);
     }
     
     public XYZ createUrl(XYZForCreationDto creationDto)
@@ -49,13 +48,32 @@ public class XYZRepository : IXYZRepository
             UrlLong = creationDto.UrlLong,
             UrlShort = randomUrl
         };
-
-        using (var context = new UrlShortenerContext())
+        
+        _context.Urls.Add(url); 
+        _context.SaveChanges();
+        return url;
+    }
+    
+    public void updateUrl(int id, XYZForUpdateDto updateDto)
+    {
+        var url = _context.Urls.FirstOrDefault(url => url.Id == id);
+        
+        if (url != null)
         {
-            context.Urls.Add(url);
-            context.SaveChanges();
-            return url;
+            url.Name = updateDto.Name;
+            url.Clicks = updateDto.Clicks;
+            
+            _context.SaveChanges();
         }
     }
 
+    public void deleteUrl(int id)
+    {
+        
+    }
+
+    public void deleteUrl(string urlShort)
+    {
+        throw new NotImplementedException();
+    }
 }

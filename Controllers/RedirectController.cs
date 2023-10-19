@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using url_shortener.Models;
 using url_shortener.Models.Repository.Interface;
 
 namespace url_shortener.Controllers;
@@ -24,11 +25,14 @@ public class RedirectController : ControllerBase
 
         var urlLongByShort = _context.getUrlLongByShort(urlShort);
         
+        var updateDto = new XYZForUpdateDto(urlLongByShort.Name,urlLongByShort.Clicks + 1);
+        
         if (urlLongByShort == null)
         {
             return NotFound();
         }
 
+        _context.updateUrl(urlLongByShort.Id, updateDto);
         return RedirectPermanent(urlLongByShort.UrlLong);
     }
 }

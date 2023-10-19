@@ -2,5 +2,6 @@
 
 public record XYZForCreationDto(
     string Name,
-    string UrlLong
+    string UrlLong,
+    string CategoryName
 );

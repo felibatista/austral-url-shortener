@@ -8,18 +8,20 @@ namespace url_shortener.Controllers;
 [Route("api/[controller]")]
 public class XYZController : ControllerBase
 {
-    private readonly IXYZRepository _context;
+    private readonly IXYZRepository _xyzContext;
+    private readonly ICategoryRepository _categoryContext;
 
-    public XYZController(IXYZRepository context)
+    public XYZController(IXYZRepository xyzContext, ICategoryRepository categoryContext)
     {
-        _context = context;
+        _xyzContext = xyzContext;
+        _categoryContext = categoryContext;
     }
 
     [Route("all")]
     [HttpGet]
     public IActionResult GetAll()
     {
-        return Ok(_context.GetAll());
+        return Ok(_xyzContext.GetAll());
     }
 
     [Route("getLong")]
@@ -31,7 +33,7 @@ public class XYZController : ControllerBase
             return BadRequest("Url short is required");
         }
 
-        var urlLongByShort = _context.getUrlLongByShort(urlShort);
+        var urlLongByShort = _xyzContext.getUrlLongByShort(urlShort);
 
         if (urlLongByShort == null)
         {
@@ -50,8 +52,34 @@ public class XYZController : ControllerBase
             return BadRequest("Url long is not valid");
         }
 
-        var url = _context.createUrl(creationDto);
+        if (_categoryContext.getByName(creationDto.CategoryName) == null)
+        {
+            return BadRequest("Category name is not valid");
+        }
+        
+        if (_xyzContext.isUrlLongExist(creationDto.UrlLong))
+        {
+            return BadRequest("Url long is already exist");
+        }
+
+        var url = _xyzContext.createUrl(creationDto);
 
         return Ok(url);
+    }
+    
+    [Route("deleteById")]
+    [HttpDelete]
+    public IActionResult deleteUrl(int id)
+    {
+        _xyzContext.deleteUrl(id);
+        return Ok();
+    }
+    
+    [Route("deleteByShort")]
+    [HttpDelete]
+    public IActionResult deleteUrl(string urlShort)
+    {
+        _xyzContext.deleteUrl(urlShort);
+        return Ok();
     }
 }
