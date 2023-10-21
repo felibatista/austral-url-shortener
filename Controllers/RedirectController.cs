@@ -16,7 +16,7 @@ public class RedirectController : ControllerBase
     }
     
     [HttpGet]
-    public IActionResult getRedirect(string urlShort = null)
+    public IActionResult getRedirect(string urlShort)
     {
         if (string.IsNullOrWhiteSpace(urlShort))
         {
@@ -25,14 +25,13 @@ public class RedirectController : ControllerBase
 
         var urlLongByShort = _context.getUrlLongByShort(urlShort);
         
-        var updateDto = new XYZForUpdateDto(urlLongByShort.Name,urlLongByShort.Clicks + 1);
-        
         if (urlLongByShort == null)
         {
             return NotFound();
         }
 
-        _context.updateUrl(urlLongByShort.Id, updateDto);
+        _context.addClick(urlLongByShort.Id);
+        
         return RedirectPermanent(urlLongByShort.UrlLong);
     }
 }

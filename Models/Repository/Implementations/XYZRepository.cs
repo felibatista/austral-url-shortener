@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using url_shortener.Data;
 using url_shortener.Entities;
 using url_shortener.Models.Repository.Interface;
@@ -16,6 +17,11 @@ public class XYZRepository : IXYZRepository
     public List<XYZ> GetAll()
     {
         return _context.Urls.ToList();
+    }
+    
+    public XYZ getById(int id)
+    {
+        return _context.Urls.FirstOrDefault(url => url.Id == id);
     }
     
     public XYZ? getUrlLongByShort(string urlShort)
@@ -46,7 +52,8 @@ public class XYZRepository : IXYZRepository
         {
             Name = creationDto.Name,
             UrlLong = creationDto.UrlLong,
-            UrlShort = randomUrl
+            UrlShort = randomUrl,
+            CategoryId = _context.Categories.FirstOrDefault(category => category.Name == creationDto.CategoryName.ToLower())?.Id ?? -1,
         };
         
         _context.Urls.Add(url); 
@@ -54,17 +61,16 @@ public class XYZRepository : IXYZRepository
         return url;
     }
     
-    public void updateUrl(int id, XYZForUpdateDto updateDto)
+    public  void addClick(int id)
     {
-        var url = _context.Urls.FirstOrDefault(url => url.Id == id);
-        
-        if (url != null)
+        XYZ? urlToChange =  _context.Urls.FirstOrDefault(url => url.Id == id);
+
+        if (urlToChange != null)
         {
-            url.Name = updateDto.Name;
-            url.Clicks = updateDto.Clicks;
-            
-            _context.SaveChanges();
+            urlToChange.Clicks++;
         }
+
+        _context.SaveChanges();
     }
 
     public void deleteUrl(int id)

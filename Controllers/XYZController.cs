@@ -26,7 +26,7 @@ public class XYZController : ControllerBase
 
     [Route("getLong")]
     [HttpGet]
-    public IActionResult getUrlLongByShort(string urlShort = null)
+    public IActionResult GetUrlLongByShort(string urlShort = null)
     {
         if (string.IsNullOrWhiteSpace(urlShort))
         {
@@ -45,7 +45,7 @@ public class XYZController : ControllerBase
 
     [Route("create")]
     [HttpPost]
-    public IActionResult createUrl([FromBody] XYZForCreationDto creationDto)
+    public IActionResult CreateUrl([FromBody] XYZForCreationDto creationDto)
     {
         if (!Uri.IsWellFormedUriString(creationDto.UrlLong, UriKind.Absolute))
         {
@@ -69,7 +69,7 @@ public class XYZController : ControllerBase
     
     [Route("deleteById")]
     [HttpDelete]
-    public IActionResult deleteUrl(int id)
+    public IActionResult DeleteUrl(int id)
     {
         _xyzContext.deleteUrl(id);
         return Ok();
@@ -77,7 +77,7 @@ public class XYZController : ControllerBase
     
     [Route("deleteByShort")]
     [HttpDelete]
-    public IActionResult deleteUrl(string urlShort)
+    public IActionResult DeleteUrl(string urlShort)
     {
         _xyzContext.deleteUrl(urlShort);
         return Ok();
