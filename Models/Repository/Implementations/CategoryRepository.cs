@@ -18,40 +18,112 @@ public class CategoryRepository : ICategoryRepository
         return _context.Categories.ToList();
     }
 
-    public Category? getById(int id)
+    public Category getById(int id)
     {
-        return _context.Categories.FirstOrDefault((category) => category.Id == id);
+       var category = _context.Categories.FirstOrDefault((category) => category.Id == id);
+        
+        if (category == null)
+        {
+            throw APIException.CreateException(APIException.Code.CT_01, "Category not found",
+                APIException.Type.NOT_FOUND);
+        }
+
+        return category;
     }
     
     public Category? getByName(string name)
     {
-        return _context.Categories.FirstOrDefault((category) => category.Name.ToLower() == name.ToLower());
+        var category = _context.Categories.FirstOrDefault((category) => category.Name.ToLower() == name.ToLower());
+        
+        if (category == null)
+        {
+            throw APIException.CreateException(APIException.Code.CT_01, "Category not found",
+                APIException.Type.NOT_FOUND);
+        }
+
+        return category;
     }
 
     public void createCategory(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw APIException.CreateException(APIException.Code.CT_03, "Name is required",
+                APIException.Type.BAD_REQUEST);
+        }
+        
+        if (getByName(name) != null)
+        {
+            throw APIException.CreateException(APIException.Code.CT_02, "Category already exist",
+                APIException.Type.BAD_REQUEST);
+        }
+        
+        
         var category = new Category
         {
             Name = name.ToLower()
         };
+
+        try
+        {
+            _context.Categories.Add(category);
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_01, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
         
-        _context.Categories.Add(category);
-        _context.SaveChanges();
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public void updateCategory(int id, string name)
     {
-        var category = getById(id);
-        
-        if (category != null)
+        Category? category = getById(id);
+
+        category.Name = name.ToLower();
+            
+        try
         {
-            category.Name = name.ToLower();
             _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
         }
     }
 
     public void deleteCategory(int id)
     {
-        throw new NotImplementedException();
+        Category? category = getById(id);
+        
+        try
+        {
+            _context.Categories.Remove(category);
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_01, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
+        
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
     }
 }

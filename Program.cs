@@ -1,4 +1,5 @@
 using url_shortener.Data;
+using url_shortener.Models;
 using url_shortener.Models.Repository;
 using url_shortener.Models.Repository.Implementations;
 using url_shortener.Models.Repository.Interface;
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<UrlShortenerContext>();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IXYZRepository, XYZRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<APIException>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

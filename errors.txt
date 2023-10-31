@@ -1,0 +1,8 @@
+API ERRORS:
+    DB:
+    - DB-01: An error occurred while setting the data in the database
+    - DB-02: An error occurred while saving the data in the database
+    CATEGORY:
+    - CT-01: Category not found
+    - CT-02: The category name is already in use
+    - CT-03: The category name is invalid
