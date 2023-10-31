@@ -21,21 +21,49 @@ public class XYZRepository : IXYZRepository
     
     public XYZ getById(int id)
     {
-        return _context.Urls.FirstOrDefault(url => url.Id == id);
+        var url = _context.Urls.FirstOrDefault(url => url.Id == id);
+        
+        if (url == null)
+        {
+            throw APIException.CreateException(APIException.Code.URL_01, "Url not found",
+                APIException.Type.NOT_FOUND);
+        }
+     
+        return url;
     }
     
     public XYZ? getUrlLongByShort(string urlShort)
     {
-        return _context.Urls.FirstOrDefault(url => url.UrlShort == urlShort);
+        var url = _context.Urls.FirstOrDefault(url => url.UrlShort == urlShort);
+        
+        if (url == null)
+        {
+            throw APIException.CreateException(APIException.Code.URL_01, "Url not found",
+                APIException.Type.NOT_FOUND);
+        }
+     
+        return url;
     }
     
     public bool isUrlShortExist(string urlShort)
     {
+        if (string.IsNullOrWhiteSpace(urlShort))
+        {
+            throw APIException.CreateException(APIException.Code.URL_03, "Url short is required",
+                APIException.Type.BAD_REQUEST);
+        }
+        
         return _context.Urls.Any(url => url.UrlShort == urlShort);
     }
     
     public bool isUrlLongExist(string urlLong)
     {
+        if (string.IsNullOrWhiteSpace(urlLong))
+        {
+            throw APIException.CreateException(APIException.Code.URL_02, "Url long is required",
+                APIException.Type.BAD_REQUEST);
+        }
+        
         return _context.Urls.Any(url => url.UrlLong == urlLong);
     }
     
@@ -48,6 +76,12 @@ public class XYZRepository : IXYZRepository
             randomUrl = urlGenerator.RandomString(6);
         }
         
+        if (!Uri.IsWellFormedUriString(creationDto.UrlLong, UriKind.Absolute))
+        {
+            throw APIException.CreateException(APIException.Code.URL_04, "Url long is not valid",
+                APIException.Type.BAD_REQUEST);
+        }
+        
         var url = new XYZ
         {
             Name = creationDto.Name,
@@ -56,30 +90,100 @@ public class XYZRepository : IXYZRepository
             CategoryId = _context.Categories.FirstOrDefault(category => category.Name == creationDto.CategoryName.ToLower())?.Id ?? -1,
         };
         
-        _context.Urls.Add(url); 
-        _context.SaveChanges();
+        if (url.CategoryId == -1)
+        {
+            throw APIException.CreateException(APIException.Code.CT_01, "Category not found",
+                APIException.Type.NOT_FOUND);
+        }
+        
+        try
+        {
+            _context.Urls.Add(url); 
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_01, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
+        
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
+
         return url;
     }
     
-    public  void addClick(int id)
+    public void addClick(int id)
     {
-        XYZ? urlToChange =  _context.Urls.FirstOrDefault(url => url.Id == id);
+        XYZ? urlToChange = getById(id);
+        
+        urlToChange.Clicks++;
 
-        if (urlToChange != null)
+        try
         {
-            urlToChange.Clicks++;
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
         }
 
-        _context.SaveChanges();
     }
 
     public void deleteUrl(int id)
     {
+        XYZ? urlToDelete = getById(id);
+
+        try
+        {
+            _context.Urls.Remove(urlToDelete);
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_01, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
         
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public void deleteUrl(string urlShort)
     {
-        throw new NotImplementedException();
+        XYZ? urlToDelete = getUrlLongByShort(urlShort);
+
+        try
+        {
+            _context.Urls.Remove(urlToDelete);
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_01, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
+        
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            throw APIException.CreateException(APIException.Code.DB_02, e.Message,
+                APIException.Type.INTERNAL_SERVER_ERROR);
+        }
     }
 }

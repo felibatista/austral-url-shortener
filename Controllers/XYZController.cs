@@ -10,11 +10,13 @@ public class XYZController : ControllerBase
 {
     private readonly IXYZRepository _xyzContext;
     private readonly ICategoryRepository _categoryContext;
+    private readonly APIException _apiException;
 
-    public XYZController(IXYZRepository xyzContext, ICategoryRepository categoryContext)
+    public XYZController(IXYZRepository xyzContext, ICategoryRepository categoryContext, APIException apiException)
     {
         _xyzContext = xyzContext;
         _categoryContext = categoryContext;
+        _apiException = apiException;
     }
 
     [Route("all")]
@@ -26,60 +28,69 @@ public class XYZController : ControllerBase
 
     [Route("getLong")]
     [HttpGet]
-    public IActionResult GetUrlLongByShort(string urlShort = null)
+    public IActionResult GetUrlLongByShort(string urlShort)
     {
-        if (string.IsNullOrWhiteSpace(urlShort))
+        try
         {
-            return BadRequest("Url short is required");
-        }
-
-        var urlLongByShort = _xyzContext.getUrlLongByShort(urlShort);
-
-        if (urlLongByShort == null)
+            var urlLongByShort = _xyzContext.getUrlLongByShort(urlShort);
+        
+            return Ok(urlLongByShort);            
+        } 
+        catch (Exception e)
         {
-            return NotFound();
-        }
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
 
-        return Ok(urlLongByShort);
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
 
     [Route("create")]
     [HttpPost]
     public IActionResult CreateUrl([FromBody] XYZForCreationDto creationDto)
     {
-        if (!Uri.IsWellFormedUriString(creationDto.UrlLong, UriKind.Absolute))
+        try
         {
-            return BadRequest("Url long is not valid");
-        }
+            var url = _xyzContext.createUrl(creationDto);
 
-        if (_categoryContext.getByName(creationDto.CategoryName) == null)
+            return Ok(url);   
+        } 
+        catch (Exception e)
         {
-            return BadRequest("Category name is not valid");
-        }
-        
-        if (_xyzContext.isUrlLongExist(creationDto.UrlLong))
-        {
-            return BadRequest("Url long is already exist");
-        }
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
 
-        var url = _xyzContext.createUrl(creationDto);
-
-        return Ok(url);
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
     
     [Route("deleteById")]
     [HttpDelete]
     public IActionResult DeleteUrl(int id)
     {
-        _xyzContext.deleteUrl(id);
-        return Ok();
+        try
+        {
+            _xyzContext.deleteUrl(id);
+            return Ok("Url " + id + " deleted");
+        }catch (Exception e)
+        {
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
     
     [Route("deleteByShort")]
     [HttpDelete]
     public IActionResult DeleteUrl(string urlShort)
     {
-        _xyzContext.deleteUrl(urlShort);
-        return Ok();
+        try
+        {
+            _xyzContext.deleteUrl(urlShort);
+            return Ok("Url " + urlShort + " deleted");   
+        }catch (Exception e)
+        {
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
 }

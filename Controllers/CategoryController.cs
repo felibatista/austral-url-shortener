@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using url_shortener.Models;
 using url_shortener.Models.Repository.Interface;
 
 namespace url_shortener.Controllers;
@@ -8,10 +9,12 @@ namespace url_shortener.Controllers;
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryRepository _context;
+    private readonly APIException _apiException;
     
-    public CategoryController(ICategoryRepository context)
+    public CategoryController(ICategoryRepository context, APIException apiException)
     {
         _context = context;
+        _apiException = apiException;
     }
     
     [Route("all")]
@@ -25,79 +28,84 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public IActionResult getById(int id)
     {
-        var category = _context.getById(id);
-        
-        if (category == null)
+        try
         {
-            return NotFound();
+            var category = _context.getById(id);
+            return Ok(category);
         }
-        
-        return Ok(category);
+        catch (Exception e)
+        {
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
     
     [Route("getByName")]
     [HttpGet]
     public IActionResult getByName(string name)
     {
-        var category = _context.getByName(name);
-        
-        if (category == null)
+        try
         {
-            return NotFound();
+            var category = _context.getByName(name);
+            return Ok(category);
         }
-        
-        return Ok(category);
+        catch (Exception e)
+        {
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
     
     [Route("create")]
     [HttpPost]
     public IActionResult createCategory(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        try
         {
-            return BadRequest("Name is required");
-        }
+            _context.createCategory(name);
         
-        if (_context.getByName(name) != null)
+            return Ok("Category " + name +" created");   
+        } catch (Exception e)
         {
-            return BadRequest("Name is already exist");
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
         }
-        
-        _context.createCategory(name);
-        
-        return Ok("Category " + name +" created");
     }
     
     [Route("update")]
     [HttpPut]
     public IActionResult updateCategory(int id, string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        try
         {
-            return BadRequest("Name is required");
-        }
-        
-        if (_context.getById(id) == null)
+            _context.updateCategory(id, name);
+            return Ok("Category " + name +" updated");
+        } catch (Exception e)
         {
-            return NotFound();
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
         }
-        
-        _context.updateCategory(id, name);
-        
-        return Ok("Category " + name +" updated");
     }
 
     [Route("delete")]
     [HttpDelete]
     public IActionResult deleteCategory(int id)
     {
-        if (_context.getById(id) == null)
+        try
         {
-            return NotFound();
+            _context.deleteCategory(id);
+
+            return Ok("Category" + id + "deleted");
         }
+        catch (Exception e)
+        {
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
 
-        _context.deleteCategory(id);
-
-        return Ok("Category deleted");
+            return _apiException.getResultFromError(type, e.Data);
+        }
     }
 }
