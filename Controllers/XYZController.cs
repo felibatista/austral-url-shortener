@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using url_shortener.Models;
 using url_shortener.Models.Repository.Interface;
@@ -9,17 +10,18 @@ namespace url_shortener.Controllers;
 public class XYZController : ControllerBase
 {
     private readonly IXYZRepository _xyzContext;
-    private readonly ICategoryRepository _categoryContext;
     private readonly APIException _apiException;
+    private readonly IAuthRepository _authRepository;
 
-    public XYZController(IXYZRepository xyzContext, ICategoryRepository categoryContext, APIException apiException)
+    public XYZController(IXYZRepository xyzContext, APIException apiException, IAuthRepository authRepository)
     {
         _xyzContext = xyzContext;
-        _categoryContext = categoryContext;
         _apiException = apiException;
+        _authRepository = authRepository;
     }
 
     [Route("all")]
+    [Authorize(Roles = "admin")]
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -46,8 +48,18 @@ public class XYZController : ControllerBase
 
     [Route("create")]
     [HttpPost]
-    public IActionResult CreateUrl([FromBody] XYZForCreationDto creationDto)
+    public IActionResult CreateUrl(XYZForCreationDto creationDto)
     {
+        if (_authRepository.getCurrentUser() == null)
+        {
+            return Unauthorized("You are not logged in");
+        }
+        
+        if (!_authRepository.isSameUserRequest(creationDto.UserId))
+        {
+            return Unauthorized("You are not allowed to create a url for another user");
+        }
+        
         try
         {
             var url = _xyzContext.createUrl(creationDto);
@@ -66,6 +78,16 @@ public class XYZController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteUrl(int id)
     {
+        if (_authRepository.getCurrentUser() == null)
+        {
+            return Unauthorized("You are not logged in");
+        }
+        
+        if (!_authRepository.isSameUserRequest(_xyzContext.getById(id).UserId))
+        {
+            return Unauthorized("You are not allowed to delete a url for another user");
+        }
+        
         try
         {
             _xyzContext.deleteUrl(id);
@@ -82,6 +104,16 @@ public class XYZController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteUrl(string urlShort)
     {
+        if (_authRepository.getCurrentUser() == null)
+        {
+            return Unauthorized("You are not logged in");
+        }
+        
+        if (!_authRepository.isSameUserRequest(_xyzContext.getUrlLongByShort(urlShort).UserId))
+        {
+            return Unauthorized("You are not allowed to delete a url for another user");
+        }
+        
         try
         {
             _xyzContext.deleteUrl(urlShort);

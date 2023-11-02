@@ -3,5 +3,6 @@
 public record XYZForCreationDto(
     string Name,
     string UrlLong,
-    string CategoryName
+    string CategoryName,
+    int UserId
 );

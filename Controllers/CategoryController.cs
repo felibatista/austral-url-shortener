@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using url_shortener.Models;
 using url_shortener.Models.Repository.Interface;
@@ -59,6 +60,7 @@ public class CategoryController : ControllerBase
     }
     
     [Route("create")]
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public IActionResult createCategory(string name)
     {
@@ -76,6 +78,7 @@ public class CategoryController : ControllerBase
     }
     
     [Route("update")]
+    [Authorize(Roles = "admin")]
     [HttpPut]
     public IActionResult updateCategory(int id, string name)
     {
@@ -92,6 +95,7 @@ public class CategoryController : ControllerBase
     }
 
     [Route("delete")]
+    [Authorize(Roles = "admin")]
     [HttpDelete]
     public IActionResult deleteCategory(int id)
     {

@@ -87,6 +87,7 @@ public class XYZRepository : IXYZRepository
             Name = creationDto.Name,
             UrlLong = creationDto.UrlLong,
             UrlShort = randomUrl,
+            UserId = creationDto.UserId,
             CategoryId = _context.Categories.FirstOrDefault(category => category.Name == creationDto.CategoryName.ToLower())?.Id ?? -1,
         };
         

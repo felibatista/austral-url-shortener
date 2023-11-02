@@ -1,4 +1,6 @@
-﻿namespace url_shortener.Entities;
+﻿using SQLiteNetExtensions.Attributes;
+
+namespace url_shortener.Entities;
 
 public class XYZ
 {
@@ -8,4 +10,6 @@ public class XYZ
     public string UrlLong { get; set; }
     public int Clicks { get; set; }
     public int CategoryId { get; set; }
+    [ForeignKey(typeof(User))]
+    public int UserId { get; set;}
 }
