@@ -1,5 +1,5 @@
 #API ERRORS
-DB:
+    DB:
     - DB-01: An error occurred while setting the data in the database
     - DB-02: An error occurred while saving the data in the database
     CATEGORY:
