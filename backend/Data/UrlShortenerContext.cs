@@ -32,7 +32,7 @@ public class UrlShortenerContext : DbContext
             new Auth
             {
                 Id = 1,
-                Password = "admin",
+                Password = "admin22@@pepe",
                 Role = "admin"
             }
         );

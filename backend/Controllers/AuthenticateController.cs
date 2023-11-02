@@ -26,7 +26,15 @@ public class AuthenticateController : ControllerBase
         if (user != null)
         {
             var token = _authService.GenerateToken(user);
-            return Ok(token);
+            var userId = user.Id;
+            
+            var response = new
+            {
+                token = token,
+                userId = userId
+            };
+            
+            return Ok(response);
         }
 
         return NotFound("User not found");

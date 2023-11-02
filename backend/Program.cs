@@ -11,6 +11,18 @@ using url_shortener.Models.Repository.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: "AllowOrigin",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 builder.Services
     .AddHttpContextAccessor()
     .AddAuthorization()
@@ -81,6 +93,9 @@ using (var context = new UrlShortenerContext())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowOrigin");
+
 
 app.UseAuthentication();
 
