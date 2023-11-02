@@ -11,6 +11,8 @@ Cuando se envía, la URL se guarda en la base de datos y se genera una cadena. L
 Si llega una solicitud de esa URL "corta", se redirige a la URL original.
 
 ## 📃 Requisitos
-- La aplicación debe ser una ASP.NET Core Web API
+- La aplicación debe ser una ASP.NET Core Web API.
 - Se debe usar una bases de datos SQL (SQLlite)
-- Al llegar una solicitud de esa URL “corta” se añade una visita al contador. de visitas de esa URL
+- Al llegar una solicitud de esa URL “corta” se añade una visita al contador de visitas de esa URL.
+- Se deben agregar categorías y cada url puede estar dentro de una categoría.
+- Solo usuarios logueados pueden crear url cortas (pero todos pueden acceder a ellas).
