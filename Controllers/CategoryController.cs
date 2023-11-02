@@ -9,10 +9,10 @@ namespace url_shortener.Controllers;
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase
 {
-    private readonly ICategoryRepository _context;
+    private readonly ICategoryService _context;
     private readonly APIException _apiException;
     
-    public CategoryController(ICategoryRepository context, APIException apiException)
+    public CategoryController(ICategoryService context, APIException apiException)
     {
         _context = context;
         _apiException = apiException;

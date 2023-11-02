@@ -25,6 +25,12 @@ public class APIException : ControllerBase
         URL_03,
         URL_04,
         
+        US_01,
+        US_02,
+        US_03,
+        US_04,
+        US_05,
+        
         DB_01,
         DB_02,
     }

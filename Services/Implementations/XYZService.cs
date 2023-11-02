@@ -6,11 +6,11 @@ using url_shortener.Util;
 
 namespace url_shortener.Models.Repository.Implementations;
 
-public class XYZRepository : IXYZRepository
+public class XYZService : IXYZService
 {
     private readonly UrlShortenerContext _context;
 
-    public XYZRepository(UrlShortenerContext context)
+    public XYZService(UrlShortenerContext context)
     {
         _context = context;
     }
@@ -69,11 +69,11 @@ public class XYZRepository : IXYZRepository
     
     public XYZ createUrl(XYZForCreationDto creationDto)
     {
-        string randomUrl = urlGenerator.RandomString(6);
+        string randomUrl = URLGenerator.RandomString(6);
         
         while (isUrlShortExist(randomUrl))
         {
-            randomUrl = urlGenerator.RandomString(6);
+            randomUrl = URLGenerator.RandomString(6);
         }
         
         if (!Uri.IsWellFormedUriString(creationDto.UrlLong, UriKind.Absolute))

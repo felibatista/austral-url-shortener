@@ -2,7 +2,7 @@ using url_shortener.Entities;
 
 namespace url_shortener.Models.Repository.Interface;
 
-public interface ICategoryRepository
+public interface ICategoryService
 {
     public List<Category> getAll();
     public Category? getById(int id);

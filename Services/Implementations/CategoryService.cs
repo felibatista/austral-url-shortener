@@ -4,11 +4,11 @@ using url_shortener.Models.Repository.Interface;
 
 namespace url_shortener.Models.Repository.Implementations;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryService : ICategoryService
 {
     private readonly UrlShortenerContext _context;
     
-    public CategoryRepository(UrlShortenerContext context)
+    public CategoryService(UrlShortenerContext context)
     {
         _context = context;
     }
@@ -52,7 +52,9 @@ public class CategoryRepository : ICategoryRepository
                 APIException.Type.BAD_REQUEST);
         }
         
-        if (getByName(name) != null)
+        var categoryName = _context.Categories.FirstOrDefault((category) => category.Name.ToLower() == name.ToLower());
+        
+        if (categoryName != null)
         {
             throw APIException.CreateException(APIException.Code.CT_02, "Category already exist",
                 APIException.Type.BAD_REQUEST);

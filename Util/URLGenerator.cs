@@ -1,6 +1,6 @@
 namespace url_shortener.Util;
 
-public class urlGenerator
+public class URLGenerator
 {
     private static Random random = new Random();
 

@@ -8,9 +8,9 @@ namespace url_shortener.Controllers;
 [Route("{urlShort}")]
 public class RedirectController : ControllerBase
 {
-    private readonly IXYZRepository _context;
+    private readonly IXYZService _context;
 
-    public RedirectController(IXYZRepository context)
+    public RedirectController(IXYZService context)
     {
         _context = context;
     }

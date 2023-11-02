@@ -9,15 +9,15 @@ namespace url_shortener.Controllers;
 [Route("api/[controller]")]
 public class XYZController : ControllerBase
 {
-    private readonly IXYZRepository _xyzContext;
+    private readonly IXYZService _xyzContext;
     private readonly APIException _apiException;
-    private readonly IAuthRepository _authRepository;
+    private readonly IAuthService _authService;
 
-    public XYZController(IXYZRepository xyzContext, APIException apiException, IAuthRepository authRepository)
+    public XYZController(IXYZService xyzContext, APIException apiException, IAuthService authService)
     {
         _xyzContext = xyzContext;
         _apiException = apiException;
-        _authRepository = authRepository;
+        _authService = authService;
     }
 
     [Route("all")]
@@ -50,12 +50,12 @@ public class XYZController : ControllerBase
     [HttpPost]
     public IActionResult CreateUrl(XYZForCreationDto creationDto)
     {
-        if (_authRepository.getCurrentUser() == null)
+        if (_authService.getCurrentUser() == null)
         {
             return Unauthorized("You are not logged in");
         }
         
-        if (!_authRepository.isSameUserRequest(creationDto.UserId))
+        if (!_authService.isSameUserRequest(creationDto.UserId))
         {
             return Unauthorized("You are not allowed to create a url for another user");
         }
@@ -78,12 +78,12 @@ public class XYZController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteUrl(int id)
     {
-        if (_authRepository.getCurrentUser() == null)
+        if (_authService.getCurrentUser() == null)
         {
             return Unauthorized("You are not logged in");
         }
         
-        if (!_authRepository.isSameUserRequest(_xyzContext.getById(id).UserId))
+        if (!_authService.isSameUserRequest(_xyzContext.getById(id).UserId))
         {
             return Unauthorized("You are not allowed to delete a url for another user");
         }
@@ -104,12 +104,12 @@ public class XYZController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteUrl(string urlShort)
     {
-        if (_authRepository.getCurrentUser() == null)
+        if (_authService.getCurrentUser() == null)
         {
             return Unauthorized("You are not logged in");
         }
         
-        if (!_authRepository.isSameUserRequest(_xyzContext.getUrlLongByShort(urlShort).UserId))
+        if (!_authService.isSameUserRequest(_xyzContext.getUrlLongByShort(urlShort).UserId))
         {
             return Unauthorized("You are not allowed to delete a url for another user");
         }
