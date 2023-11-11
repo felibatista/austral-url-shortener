@@ -32,16 +32,6 @@ public class UserController : ControllerBase
     [HttpGet("urls/{userId}")]
     public IActionResult getUrls(int userId)
     {
-        if (_authService.getCurrentUser() == null)
-        {
-            return Unauthorized("You are not logged in");
-        }
-        
-        if (!_authService.isSameUserRequest(userId))
-        {
-            return Unauthorized("You are not allowed to get urls from another user");
-        }
-        
         try
         {
             var urls = _userContext.GetUrls(userId);

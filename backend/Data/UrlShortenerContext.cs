@@ -27,6 +27,14 @@ public class UrlShortenerContext : DbContext
                 Email = "admin@admin.com",
                 Urls = new List<XYZ>(),
             });
+        
+        modelBuilder.Entity<Category>().HasData(
+            new Category
+            {
+                Id = 1,
+                Name = "Default",
+            }
+        );
 
         modelBuilder.Entity<Auth>().HasData(
             new Auth
