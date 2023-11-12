@@ -11,11 +11,13 @@ public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _context;
     private readonly APIException _apiException;
+    private readonly IAuthService _authService;
     
-    public CategoryController(ICategoryService context, APIException apiException)
+    public CategoryController(ICategoryService context, APIException apiException, IAuthService authService)
     {
         _context = context;
         _apiException = apiException;
+        _authService = authService;
     }
     
     [Route("all")]
@@ -60,10 +62,19 @@ public class CategoryController : ControllerBase
     }
     
     [Route("create")]
-    [Authorize(Roles = "admin")]
     [HttpPost]
     public IActionResult createCategory(string name)
     {
+        if (_authService.getCurrentUser() == null)
+        {
+            return Unauthorized();
+        }
+
+        if (_authService.getCurrentUser().Role != "admin")
+        {
+            return Unauthorized();
+        }
+
         try
         {
             _context.createCategory(name);

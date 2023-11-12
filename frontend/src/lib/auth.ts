@@ -48,8 +48,6 @@ export async function getUser() {
 
   const payload = JSON.parse(atob(jwtToken.split(".")[1]));
 
-  console.log(payload);
-
   const userBody = await fetch(`${getUrlAPI()}/api/User/${payload.userId}`, {
     method: "GET",
     headers: {

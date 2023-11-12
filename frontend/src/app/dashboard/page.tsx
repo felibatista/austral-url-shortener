@@ -57,10 +57,10 @@ export default function Dashboard() {
           <Separator />
         </div>
 
-        <div className="w-full py-12">
+        <div className="w-full lg:py-4 py-2">
           <div className="max-w-[1500px] mx-auto p-4 md:p-0">
-            <div className="grid grid-cols-2 h-[14  rem] mx-auto gap-8">
-              <Card className="w-full p-[4rem] mt-8">
+            <div className="grid lg:grid-cols-2  mx-auto lg:gap-8">
+              <Card className="w-full md:p-[4rem] p-8 mt-8">
                 <h1 className="text-2xl font-semibold">
                   Cantidad de visitas totales
                 </h1>
@@ -72,7 +72,7 @@ export default function Dashboard() {
                 <div className="mt-4 font-bold text-4xl">{visits}</div>
               </Card>
 
-              <Card className="w-full p-[4rem] mt-8">
+              <Card className="w-full md:p-[4rem] p-8 mt-8">
                 <h1 className="text-2xl font-semibold">
                   Cantidad de enlaces acortados
                 </h1>
@@ -81,7 +81,7 @@ export default function Dashboard() {
                 <div className="mt-4 font-bold text-4xl">{urls}</div>
               </Card>
             </div>
-            <Card className="w-full p-[4rem] mt-8">
+            <Card className="w-full md:p-[4rem] p-8 mt-8">
               <h1 className="text-2xl font-semibold">Tús enlaces acortados</h1>
               <p>
                 Aquí puedes ver todos los enlaces que has acortado con nosotros.

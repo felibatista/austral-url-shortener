@@ -8,7 +8,7 @@ import { Skeleton } from "./ui/skeleton";
 import { logout } from "@/lib/auth";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 export function Navbar({ user }: { user: User | null | undefined }) {
-  const [isHome, setIsHome] = useState<boolean>(false);
+  const [isHome, setIsHome] = useState<boolean>(true);
   useEffect(() => {
     setIsHome(window.location.pathname === "/");
   }, []);

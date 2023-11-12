@@ -1,6 +1,19 @@
+"use client"
+
+import { useEffect, useState } from "react";
 import URLCreator from "./url/URLCreator";
+import { getAllCategories } from "@/lib/categories";
+import { Category } from "@/lib/types";
 
 export function Hero() {
+  const [categories, setCategorires] = useState<Category[] | undefined>(undefined);
+
+  useEffect(() => {
+    getAllCategories().then(categories => {
+      setCategorires(categories)
+    })
+  }, []);
+
   return (
     <div className="flex flex-col w-full justify-center items-center flex-1 p-4 max-w-[900px] mx-auto gap-8">
       <div className="text-center flex flex-col gap-4 max-w-[700px] mx-auto p-4">
@@ -15,7 +28,7 @@ export function Hero() {
           información sobre ellos y sobre quienes entraron.
         </p>
       </div>
-      <URLCreator categories={["Test", "Test"]} />
+      <URLCreator categories={categories!} />
     </div>
   );
 }

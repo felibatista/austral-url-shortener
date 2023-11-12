@@ -7,6 +7,7 @@ export type User = {
   email: string | null;
   role: string;
 }
+
 export type Url = {
   id: string
   name: string
@@ -14,6 +15,11 @@ export type Url = {
   urlLong: string
   clicks: number
   categoryId: number
+}
+
+export type Category = {
+  id: number,
+  name: string
 }
 
 export const phases = ["input", "loading", "result"] as const;
