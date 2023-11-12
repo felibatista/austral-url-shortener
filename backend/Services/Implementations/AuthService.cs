@@ -76,7 +76,11 @@ public class AuthService : IAuthService
             {
                 return null;
             }
-            
+
+            if (userClaims.FirstOrDefault(x => x.Type == "userId") == null)
+            {
+                return null;
+            }
             return new Auth
             {
                 Id = int.Parse(userClaims.FirstOrDefault(x => x.Type == "userId")?.Value),

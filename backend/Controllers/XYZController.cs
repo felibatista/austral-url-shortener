@@ -45,6 +45,34 @@ public class XYZController : ControllerBase
             return _apiException.getResultFromError(type, e.Data);
         }
     }
+    
+    [Route("getById")]
+    [HttpGet]
+    public IActionResult GetById(int id)
+    {
+        if (_authService.getCurrentUser() == null)
+        {
+            return Unauthorized("You are not logged in");
+        }
+        
+        if (!_authService.isSameUserRequest(_xyzContext.getById(id).UserId))
+        {
+            return Unauthorized("You are not allowed to get a url for another user");
+        }
+        
+        try
+        {
+            var url = _xyzContext.getById(id);
+        
+            return Ok(url);            
+        } 
+        catch (Exception e)
+        {
+            Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
+
+            return _apiException.getResultFromError(type, e.Data);
+        }
+    }
 
     [Route("create")]
     [HttpPost]
