@@ -24,6 +24,12 @@ public class AuthService : IAuthService
     public Auth Authenticate(UserForLoginDTO userForLoginDto)
     {
         var user = _context.Users.FirstOrDefault(x => x.Username.ToLower() == userForLoginDto.Username.ToLower());
+        
+         if (user == null)
+         {
+             return null;
+         }
+         
         var password = _context.Auth.FirstOrDefault(x => x.Password == userForLoginDto.Password && x.Id == user.Id);
        
         if (user != null && password != null)
@@ -54,10 +60,23 @@ public class AuthService : IAuthService
     
     public Auth getCurrentUser()
     {
-        var identity = _httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+        var claimPrincipal = _httpContextAccessor.HttpContext.User;
+        
+        if (claimPrincipal == null)
+        {
+            return null;
+        }
+        
+        var identity = claimPrincipal.Identity as ClaimsIdentity;
         if (identity != null)
         {
             var userClaims = identity.Claims;
+            
+            if (userClaims == null)
+            {
+                return null;
+            }
+            
             return new Auth
             {
                 Id = int.Parse(userClaims.FirstOrDefault(x => x.Type == "userId")?.Value),

@@ -37,6 +37,10 @@ public class AuthenticateController : ControllerBase
             return Ok(response);
         }
 
-        return NotFound("User not found");
+        var error = new
+        {
+            error = "Username or password is incorrect"
+        };
+        return NotFound(error);
     }
 }

@@ -34,10 +34,30 @@ public class UserController : ControllerBase
     {
         try
         {
-            var urls = _userContext.GetUrls(userId);
-            return Ok(urls);
+            if (_authService.getCurrentUser() == null)
+            {
+                return Unauthorized();
+            }
+
+            if (_authService.getCurrentUser().Id == userId || _authService.getCurrentUser().Role == "admin")
+            {
+                var urls = _userContext.GetUrls(userId);
+                return Ok(urls);
+            }
+        
+            return Unauthorized();
         } catch (Exception e)
         {
+            if (e.Data == null)
+            {
+                return Unauthorized();
+            }
+            
+            if (e.Data["type"] == null || e.Data["type"].ToString() == "NOT_FOUND")
+            {
+                return Unauthorized();
+            }
+            
             Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
 
             return _apiException.getResultFromError(type, e.Data);
@@ -46,16 +66,34 @@ public class UserController : ControllerBase
 
 
     [HttpGet("{userId}")]
-    [Authorize(Roles = "admin")]
     public ActionResult<User> GetUser(int userId)
     {
         try
         {
-            User? user = _userContext.GetUser(userId);
-            return user;
+            if (_authService.getCurrentUser() == null)
+            {
+                return Unauthorized();
+            }
+            
+            if (_authService.getCurrentUser().Id == userId || _authService.getCurrentUser().Role == "admin")
+            {
+                return Ok(_userContext.GetUser(userId));
+            }
+
+            return Unauthorized();
         }
         catch (Exception e)
         {
+            if (e.Data == null)
+            {
+                return Unauthorized();
+            }
+            
+            if (e.Data["type"] == null || e.Data["type"].ToString() == "NOT_FOUND")
+            {
+                return Unauthorized();
+            }
+            
             Enum.TryParse(e.Data["type"].ToString(), out APIException.Type type);
 
             return _apiException.getResultFromError(type, e.Data);

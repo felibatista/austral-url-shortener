@@ -1,4 +1,4 @@
-import URLCreator from "./URLCreator";
+import URLCreator from "./url/URLCreator";
 
 export function Hero() {
   return (

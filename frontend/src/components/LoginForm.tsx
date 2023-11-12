@@ -21,10 +21,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getUrlAPI } from "@/lib/utils";
-import { User } from "@/lib/types";
-import { useContext } from "react";
-import { Context } from "@/app/providers";
+
+import { authenticate } from "@/lib/auth";
+import { useState } from "react";
+import { Loading } from "./ui/loading";
 
 const formSchema = z.object({
   username: z
@@ -49,7 +49,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const { user, setUser } = useContext(Context);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,44 +63,20 @@ export function LoginForm() {
     const username = values.username;
     const password = values.password;
 
-    const jwt = fetch(getUrlAPI() + "/api/Authenticate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    }).then((res) => res.json());
+    setLoading(true);
 
-    jwt.then((body) => {
-      if (body.token) {
-        const token = body.token;
-        const userId = body.userId;
-
-        const user = fetch(getUrlAPI() + "/api/User/" + userId, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }).then((res) => res.json());
-
-        user.then((userBody) => {
-          const userAuth: User = {
-            id: userBody.id,
-            username: userBody.username,
-            email: userBody.email,
-            role: userBody.role,
-            firstName: userBody.firstName,
-            lastName: userBody.lastName,
-            token: token,
-          };
-
-          setUser(userAuth);
-        });
-      } else {
-        alert("Usuario o contraseña incorrectos.");
-      }
-    });
+    authenticate({ username, password })
+      .then((succes) => {
+        if (succes) {
+          window.location.href = "/";
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -137,7 +113,7 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Contraseña</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -158,7 +134,12 @@ export function LoginForm() {
                 ¿No tienes una cuenta? Regístrate
               </a>
             </div>
-            <Button type="submit">Ingresar</Button>
+            <Button disabled={loading} type="submit">
+              Ingresar
+              {loading === true ? (
+                <span className="animate-pulse">...</span>
+              ) : null}
+            </Button>
           </form>
         </Form>
       </CardContent>

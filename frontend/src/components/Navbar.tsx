@@ -1,24 +1,35 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Context } from "@/app/providers";
-import { User } from "@/lib/types";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { User } from "@/lib/types";
+import { Skeleton } from "./ui/skeleton";
+import { logout } from "@/lib/auth";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+export function Navbar({ user }: { user: User | null | undefined }) {
+  const [isHome, setIsHome] = useState<boolean>(false);
+  useEffect(() => {
+    setIsHome(window.location.pathname === "/");
+  }, []);
 
-export function Navbar() {
-  const { user, setUser } = useContext(Context);
-  
-  return (
-    <nav className="p-4 h-fit w-full">
-      <div className="max-w-[1500px] w-full mx-auto flex items-center justify-between flex-wrap">
-        <div className="flex items-center flex-shrink-0 text-dark mr-6">
-          <span className="font-semibold text-xl tracking-tight">
-            URL Shortener
-          </span>
-        </div>
-
-        {user != null ? (
+  function renderButton(user: User | null | undefined) {
+    switch (user) {
+      case undefined:
+        return <Skeleton className="w-[122px] h-[36px]"></Skeleton>;
+      case null:
+        return (
+          <Button
+            variant="default"
+            onClick={() => {
+              window.location.href = "/login";
+            }}
+          >
+            Iniciar sesión
+          </Button>
+        );
+      default:
+        return (
           <div className="flex gap-4 items-center">
             <Button
               variant="default"
@@ -33,23 +44,36 @@ export function Navbar() {
             <Button
               variant="secondary"
               onClick={() => {
-                localStorage.removeItem("user");
-                window.location.href = "/";
+                logout();
               }}
             >
               Cerrar sesión
             </Button>
           </div>
-        ) : (
-          <Button
-            variant="default"
-            onClick={() => {
-              window.location.href = "/login";
-            }}
-          >
-            Iniciar sesión
-          </Button>
-        )}
+        );
+    }
+  }
+
+  return (
+    <nav className="p-4 h-fit w-full">
+      <div className="max-w-[1500px] w-full mx-auto flex items-center justify-between flex-wrap">
+        <div className="flex items-center flex-shrink-0 text-dark mr-6 gap-4">
+          {isHome == false ? (
+            <a
+              href="/"
+              className="flex items-center gap-1 hover:underline relative top-[2px] text-lg"
+            >
+              <ArrowLeftIcon width={20} height={20} />
+              Volver al inicio
+            </a>
+          ) : (
+            <h1 className="font-semibold text-xl tracking-tight">
+              URL Shortener
+            </h1>
+          )}
+        </div>
+
+        {renderButton(user)}
       </div>
     </nav>
   );

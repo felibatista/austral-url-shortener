@@ -1,10 +1,7 @@
 "use client";
+
 import { LoginForm } from "@/components/LoginForm";
 import { Footer } from "@/components/Footer";
-import { Hero } from "@/components/Hero";
-import { Navbar } from "@/components/Navbar";
-import URLCreator from "@/components/URLCreator";
-import { Separator } from "@/components/ui/separator";
 
 export default function Login() {
   return (
