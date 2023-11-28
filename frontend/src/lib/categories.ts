@@ -7,9 +7,14 @@ export async function getAllCategories() {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => {
-    return res.json()
-  });
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
 
   return data;
 }
