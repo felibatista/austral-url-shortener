@@ -88,6 +88,7 @@ if (app.Environment.IsDevelopment())
 
 using (var context = new UrlShortenerContext())
 {
+    context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
 }
 

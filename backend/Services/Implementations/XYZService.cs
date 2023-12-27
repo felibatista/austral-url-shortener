@@ -88,14 +88,14 @@ public class XYZService : IXYZService
             UrlLong = creationDto.UrlLong,
             UrlShort = randomUrl,
             UserId = creationDto.UserId,
-            CategoryId = _context.Categories.FirstOrDefault(category => category.Name.ToLower() == creationDto.CategoryName.ToLower())?.Id ?? -1,
+           // CategoryId = _context.Categories.FirstOrDefault(category => category.Name.ToLower() == creationDto.CategoryName.ToLower())?.Id ?? -1,
         };
         
-        if (url.CategoryId == -1)
+       /* if (url.CategoryId == -1)
         {
             throw APIException.CreateException(APIException.Code.CT_01, "Category not found",
                 APIException.Type.NOT_FOUND);
-        }
+        }*/
         
         try
         {
