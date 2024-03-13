@@ -459,7 +459,7 @@
         }
       }
     },
-    "/api/XYZ/create": {
+    "/api/XYZ": {
       "post": {
         "tags": [
           "XYZ"
