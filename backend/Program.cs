@@ -56,6 +56,12 @@ builder.Services.AddScoped<APIException>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setupAction =>
 {
+    setupAction.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Shypper API",
+        Version = "v1"
+    });
+    
     setupAction.AddSecurityDefinition("ConsultaAlumnosApiBearerAuth", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
     {
         Type = SecuritySchemeType.Http,
@@ -83,7 +89,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("v1/swagger.json", "MyAPI V1");
+    });
 }
 
 using (var context = new UrlShortenerContext())
