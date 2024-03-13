@@ -1,0 +1,489 @@
+openapi: 3.0.1
+info:
+  title: Shypper API
+  version: v1
+paths:
+  /api/Authenticate:
+    post:
+      tags:
+        - Authenticate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForLoginDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserForLoginDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserForLoginDTO'
+      responses:
+        '200':
+          description: Success
+  /api/Category/all:
+    get:
+      tags:
+        - Category
+      responses:
+        '200':
+          description: Success
+  /api/Category/getById:
+    get:
+      tags:
+        - Category
+      parameters:
+        - name: id
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  /api/Category/getByName:
+    get:
+      tags:
+        - Category
+      parameters:
+        - name: name
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /api/Category/create:
+    post:
+      tags:
+        - Category
+      parameters:
+        - name: name
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /api/Category/update:
+    put:
+      tags:
+        - Category
+      parameters:
+        - name: id
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /api/Category/delete:
+    delete:
+      tags:
+        - Category
+      parameters:
+        - name: id
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  '/{urlShort}':
+    get:
+      tags:
+        - Redirect
+      parameters:
+        - name: urlShort
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /api/User/all:
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: Success
+  '/api/User/urls/{userId}':
+    get:
+      tags:
+        - User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  '/api/User/{userId}':
+    get:
+      tags:
+        - User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/User:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForCreationDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserForCreationDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserForCreationDTO'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForUpdateDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserForUpdateDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserForUpdateDTO'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/XYZ/all:
+    get:
+      tags:
+        - XYZ
+      responses:
+        '200':
+          description: Success
+  /api/XYZ/getLong:
+    get:
+      tags:
+        - XYZ
+      parameters:
+        - name: urlShort
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /api/XYZ/getById:
+    get:
+      tags:
+        - XYZ
+      parameters:
+        - name: id
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  /api/XYZ/create:
+    post:
+      tags:
+        - XYZ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/XYZForCreationDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/XYZForCreationDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/XYZForCreationDto'
+      responses:
+        '200':
+          description: Success
+  /api/XYZ/deleteById:
+    delete:
+      tags:
+        - XYZ
+      parameters:
+        - name: id
+          in: query
+          style: form
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+  /api/XYZ/deleteByShort:
+    delete:
+      tags:
+        - XYZ
+      parameters:
+        - name: urlShort
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+components:
+  schemas:
+    Auth:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        password:
+          type: string
+          nullable: true
+        role:
+          type: string
+          nullable: true
+        user:
+          $ref: '#/components/schemas/User'
+      additionalProperties: false
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/XYZ'
+          nullable: true
+      additionalProperties: false
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/XYZ'
+          nullable: true
+        authId:
+          type: integer
+          format: int32
+        auth:
+          $ref: '#/components/schemas/Auth'
+      additionalProperties: false
+    UserForCreationDTO:
+      required:
+        - password
+      type: object
+      properties:
+        userName:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          minLength: 1
+          pattern: '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'
+          type: string
+      additionalProperties: false
+    UserForLoginDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UserForUpdateDTO:
+      type: object
+      properties:
+        userToChangeID:
+          type: integer
+          format: int32
+        userName:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      additionalProperties: false
+    XYZ:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+          nullable: true
+        urlShort:
+          type: string
+          nullable: true
+        urlLong:
+          type: string
+          nullable: true
+        clicks:
+          type: integer
+          format: int32
+        userId:
+          type: integer
+          format: int32
+        user:
+          $ref: '#/components/schemas/User'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+          nullable: true
+      additionalProperties: false
+    XYZForCreationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        urlLong:
+          type: string
+          nullable: true
+        categoryName:
+          type: string
+          nullable: true
+        userId:
+          type: integer
+          format: int32
+      additionalProperties: false
+  securitySchemes:
+    ConsultaAlumnosApiBearerAuth:
+      type: http
+      description: Acá pegar el token generado al loguearse.
+      scheme: Bearer
+security:
+  - ConsultaAlumnosApiBearerAuth: [ ]
