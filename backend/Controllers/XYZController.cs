@@ -73,8 +73,7 @@ public class XYZController : ControllerBase
             return _apiException.getResultFromError(type, e.Data);
         }
     }
-
-    [Route("create")]
+    
     [HttpPost]
     public IActionResult CreateUrl(XYZForCreationDto creationDto)
     {
