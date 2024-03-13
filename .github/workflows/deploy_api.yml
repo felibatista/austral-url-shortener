@@ -22,9 +22,9 @@ jobs:
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
-          doc: DOCUMENTATION_SLUG_OR_ID
+          doc: 8a3faaa0-eb97-463e-a8ce-d684df716998
           token: ${{secrets.DEPLOY_API_KEY}}
-          file: doc/api-documentation.yml
+          file: backend/wwwroot/swagger/v1/swagger.yaml
   api-diff:
     if: ${{ github.event_name == 'pull_request' }}
     name: Check API diff on Bump.sh
@@ -35,9 +35,9 @@ jobs:
       - name: Comment pull request with API diff
         uses: bump-sh/github-action@v1
         with:
-          doc: DOCUMENTATION_SLUG_OR_ID
+          doc: 8a3faaa0-eb97-463e-a8ce-d684df716998
           token: ${{secrets.DEPLOY_API_KEY}}
-          file: doc/api-documentation.yml
+          file: backend/wwwroot/swagger/v1/swagger.yaml
           command: diff
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
