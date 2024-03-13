@@ -275,7 +275,7 @@ paths:
       responses:
         '200':
           description: Success
-  /api/XYZ/create:
+  /api/XYZ:
     post:
       tags:
         - XYZ
