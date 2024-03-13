@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Card,
@@ -21,25 +21,29 @@ export default function URLCreatorResult({
   setPhase,
   setResultId,
 
-  resultId
+  resultId,
 }: {
   setPhase: (phase: PhaseUrl) => void;
   setResultId: (id: number | null) => void;
 
   resultId: number | null;
 }) {
-  const [loading, setLoading] = useState<boolean>(true)
-  const [url, setUrl] = useState<Url | null | undefined>(undefined)
+  const [loading, setLoading] = useState<boolean>(true);
+  const [url, setUrl] = useState<Url | null | undefined>(undefined);
 
   useEffect(() => {
-    getUrl(resultId!).then((url) => setUrl(url))
-  }, [])
+    if (resultId == null) {
+      return;
+    }
+
+    getUrl(resultId).then((url) => setUrl(url));
+  }, [resultId]);
 
   if (url == undefined) {
     return <Skeleton className="w-full h-[211px]" />;
   }
 
-  if (url == null){
+  if (url == null) {
     return (
       <Card className="w-full">
         <CardHeader>
@@ -64,8 +68,15 @@ export default function URLCreatorResult({
         </CardDescription>
       </CardHeader>
       <CardContent>
-      <CardTitle className="text-base">Información del URL:</CardTitle>
-        <p className="text-muted-foreground">| Link acortado: <a href={`${getUrlAPI()}/${url.urlShort}`} target="_blank" className="text-primary hover:underline">{`${getUrlAPI()}/${url.urlShort}`}</a>  </p>
+        <CardTitle className="text-base">Información del URL:</CardTitle>
+        <p className="text-muted-foreground">
+          | Link acortado:{" "}
+          <a
+            href={`${getUrlAPI()}/${url.urlShort}`}
+            target="_blank"
+            className="text-primary hover:underline"
+          >{`${getUrlAPI()}/${url.urlShort}`}</a>{" "}
+        </p>
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button onClick={() => setPhase("input")}> Acortar otro URL</Button>

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 
 import { Progress } from "../ui/progress";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PhaseUrl } from "@/lib/types";
 import { addUrl } from "@/lib/url";
 
@@ -30,7 +30,7 @@ export default function URLCreatorLoading({
   const [phase, setPhaseLoading] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
 
-  function startRender() {
+  const startRender = () => {
     setDescription("Iniciando conexiones con el servidor...");
     setPhaseLoading(1);
 
@@ -77,9 +77,11 @@ export default function URLCreatorLoading({
     });
   }
 
+  const startRenderRef = useRef(startRender);
+
   useEffect(() => {
-    startRender();
-  }, []);
+    startRenderRef.current();
+  }, [startRender]);
 
   return (
     <Card className="w-full h-[211px] grid items-center ">

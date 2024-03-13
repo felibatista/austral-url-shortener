@@ -52,15 +52,6 @@ export default function URLCreatorInput({
   const [nameError, setNameError] = useState<string | null>(null);
   const [urlError, setUrlError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setUrlError(null);
-    setNameError(null);
-
-    setUrl("");
-    setName("");
-    setCategory("Default");
-  }, []);
-
   function verifyName(nameVerify: string) {
     if (nameVerify.length < 3) {
       return {
